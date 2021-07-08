@@ -28,7 +28,7 @@ def start_survey():
 
 
 
-@app.route('/questions/<int:questionNum>', methods=["POST"])
+@app.route('/questions/<int:questionNum>')
 def ask_questions(questionNum):
     """Loads pages for each question in the survey, and logs answer in responses list"""
 
@@ -37,5 +37,26 @@ def ask_questions(questionNum):
         question=survey.questions[questionNum]
     )
 
+
+@app.route('/answer', methods=['POST'])
+def handle_answer():
+    answer = request.form.get('answer')
+    responses.append(answer)
+
+    if len(responses) == len(survey.questions):
+        return redirect('/thanks')
+
+    new_question_index = str(len(responses))
+
+
+
+
+    return redirect(f'/questions/{new_question_index}')
+
+
+@app.route('/thanks')
+def thank_user():
+
+    return render_template('completion.html')    
 
 
