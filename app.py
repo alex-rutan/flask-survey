@@ -23,30 +23,31 @@ def load_home():
 @app.route('/begin', methods=["POST"])
 def start_survey():
     """Redirects to the first question of the survey"""
+    responses.clear()
 
     return redirect("/questions/0")
 
 
 
-@app.route('/questions/<int:questionNum>')
-def ask_questions(questionNum):
+@app.route('/questions/<int:question_num>')
+def ask_questions(question_num):
     """Loads pages for each question in the survey, and logs answer in responses list"""
 
     return render_template(
         "question.html",
-        question=survey.questions[questionNum]
+        question=survey.questions[question_num]
     )
 
 
 @app.route('/answer', methods=['POST'])
 def handle_answer():
-    answer = request.form.get('answer')
+    answer = request.form['answer']
     responses.append(answer)
 
     if len(responses) == len(survey.questions):
         return redirect('/thanks')
 
-    new_question_index = str(len(responses))
+    new_question_index = len(responses)
 
 
 
