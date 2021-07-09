@@ -33,6 +33,19 @@ def start_survey():
 def ask_questions(question_num):
     """Loads pages for each question in the survey, and logs answer in responses list"""
 
+    responses_length = len(session['responses'])
+
+    # If the user tries to skip ahead to a further question, they will be redirected to the correct question
+    if question_num != responses_length:
+        flash('You tried to access an invalid question.')
+        flash('bad you')
+        return redirect(f'/questions/{responses_length}')
+
+    # If the user has completed all questions and tries to return to a survey question, they will be redirected to the thanks endpoint
+    if responses_length == len(survey.questions):
+        flash('You have already completed the survey.')
+        return redirect('/thanks')
+
     return render_template(
         "question.html",
         question=survey.questions[question_num]
@@ -41,6 +54,7 @@ def ask_questions(question_num):
 
 @app.route('/answer', methods=['POST'])
 def handle_answer():
+    """Appends the user's answer to the session and redirects the user to the next question, or thanks page if they've completed all questions"""
     answer = request.form['answer']
 
     responses = session["responses"]
@@ -60,6 +74,7 @@ def handle_answer():
 
 @app.route('/thanks')
 def thank_user():
+    """Thanks user for participating in the survey"""
 
     return render_template('completion.html')    
 
