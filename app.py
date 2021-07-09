@@ -35,16 +35,15 @@ def ask_questions(question_num):
 
     responses_length = len(session['responses'])
 
-    # If the user tries to skip ahead to a further question, they will be redirected to the correct question
-    if question_num != responses_length:
-        flash('You tried to access an invalid question.')
-        flash('bad you')
-        return redirect(f'/questions/{responses_length}')
-
     # If the user has completed all questions and tries to return to a survey question, they will be redirected to the thanks endpoint
     if responses_length == len(survey.questions):
         flash('You have already completed the survey.')
         return redirect('/thanks')
+
+    # If the user tries to skip ahead to a further question, they will be redirected to the correct question
+    if question_num != responses_length:
+        flash('You tried to access an invalid question. Bad you.')
+        return redirect(f'/questions/{responses_length}')
 
     return render_template(
         "question.html",
